@@ -15,6 +15,7 @@ public sealed class ValueObjectsTests
     [InlineData(1000, "978", false)]
     [InlineData(2500, "826", false)]
     [InlineData(100, "124", true)]
+    [InlineData(0, "840", true)]
     [InlineData(-100, "840", true)]
     public void CreateMoney(long amount, string currencyCode, bool isInvalid)
     {
@@ -73,7 +74,7 @@ public sealed class ValueObjectsTests
         new object[] { new FakeTimeProvider(DateTime.UtcNow), "", CurrentMonth, NextYear, DigitSequence(3, 4), true },
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(13), CurrentMonth, NextYear, DigitSequence(3, 4), true },
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(20), CurrentMonth, NextYear, DigitSequence(3, 4), true },
-        new object[] { new FakeTimeProvider(DateTime.UtcNow), LetterDigitsSequence(14, 19), CurrentMonth, NextYear, DigitSequence(3, 4), true },
+        new object[] { new FakeTimeProvider(DateTime.UtcNow), LetterDigitSequence(14, 19), CurrentMonth, NextYear, DigitSequence(3, 4), true },
 
         // -- Expiry month out of range
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), PreviousMonth, CurrentYear, DigitSequence(3, 4), true },
@@ -85,7 +86,7 @@ public sealed class ValueObjectsTests
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), CurrentMonth, NextYear, "", true },
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), CurrentMonth, NextYear, DigitSequence(2), true },
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), CurrentMonth, NextYear, DigitSequence(5), true },
-        new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), CurrentMonth, NextYear, LetterDigitsSequence(3, 4), true },
+        new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(14, 19), CurrentMonth, NextYear, LetterDigitSequence(3, 4), true },
 
         // -- All invalid
         new object[] { new FakeTimeProvider(DateTime.UtcNow), DigitSequence(5, 13), PreviousMonth, CurrentYear, DigitSequence(2), true }
@@ -98,7 +99,7 @@ public sealed class ValueObjectsTests
         return Faker.Random.String2(minLength, maxLength, "0123456789");
     }
 
-    private static string LetterDigitsSequence(int minLength, int maxLength)
+    private static string LetterDigitSequence(int minLength, int maxLength)
     {
         return Faker.Random.String2(minLength, maxLength, "abcdefghijklmnopqrstuvwxyz0123456789");
     }

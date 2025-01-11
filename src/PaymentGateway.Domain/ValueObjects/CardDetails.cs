@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using OneOf;
 using OneOf.Types;
 
@@ -22,7 +23,6 @@ public sealed class CardDetails
 
     private CardDetails(string cardNumber, int expiryMonth, int expiryYear, string cvv)
     {
-
         CardNumber = cardNumber;
         ExpiryMonth = expiryMonth;
         ExpiryYear = expiryYear;
@@ -41,17 +41,15 @@ public sealed class CardDetailsValidator : AbstractValidator<CardDetails>
             .Matches(@"^\d{14,19}$");
 
         RuleFor(x => x.ExpiryYear)
-            .NotEmpty()
             .InclusiveBetween(utcNow.Year, 2040);
 
         RuleFor(x => x.ExpiryMonth)
-            .NotEmpty()
             .InclusiveBetween(1, 12)
             .Custom((expiryMonth, context) =>
             {
                 if (expiryMonth < utcNow.Month && utcNow.Year == context.InstanceToValidate.ExpiryYear)
                 {
-                    context.AddFailure($"Expiry month '{expiryMonth}' has already passed in the current year.");
+                    context.AddFailure(new ValidationFailure());
                 }
             });
 
