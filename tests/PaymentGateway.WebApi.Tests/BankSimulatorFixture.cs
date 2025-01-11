@@ -35,13 +35,30 @@ public sealed class BankSimulatorFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(BankSimulatorLoadTimeInSeconds));
-        await BankSimulatorContainer.StartAsync(cts.Token);
+        if (!await IsBankSimulatorServiceAlreadyUpAsync())
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(BankSimulatorLoadTimeInSeconds));
+            await BankSimulatorContainer.StartAsync(cts.Token);
+        }
     }
 
     public async Task DisposeAsync()
     {
         await BankSimulatorContainer.StopAsync();
+    }
+
+    private async Task<bool> IsBankSimulatorServiceAlreadyUpAsync()
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync("http://localhost:2525");
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 
