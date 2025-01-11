@@ -9,7 +9,7 @@ https://github.com/cko-recruitment/#requirements
 3. The Banking Simulator API for payment creation is idempotent and handled by the simulator due to lack of explicit fields in the API.
 4. Payments are processed synchronously without persistent storage or messaging for simplicity, assuming no network failures or concurrent requests.
 5. MerchantId is passed as a header to uniquely identify clients.
-6. The RESTful API is designed without versioning around the payment resource for simplicity.
+6. The API is designed without versioning around the payment resource for simplicity.
 7. Comprehensive authentication and authorization layers are omitted for simplicity.
 8. The test suite addresses key risk areas, including API endpoint functionality, validation, 
 security checks for exposing more than four digits of card numbers, and ensuring merchants cannot access payments that do not belong to them.
