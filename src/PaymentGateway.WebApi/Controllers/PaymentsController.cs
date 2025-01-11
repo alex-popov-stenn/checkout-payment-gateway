@@ -39,7 +39,7 @@ public class PaymentsController(
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetPayment(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPayment([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var merchantId = operationContext.GetMerchantId();
         var payment = await paymentRepository.FindPaymentByIdAsync(id, cancellationToken);

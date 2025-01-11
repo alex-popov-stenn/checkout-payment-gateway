@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F36BD266-CD75-4438-9BF9-CD91CDB18F2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60C53DF6-757D-4EE2-AFD2-0966CAD00C46}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.WebApi", "src\PaymentGateway.WebApi\PaymentGateway.WebApi.csproj", "{3FC02B5B-6255-4A6B-AD9F-21C360891EF6}"
 EndProject

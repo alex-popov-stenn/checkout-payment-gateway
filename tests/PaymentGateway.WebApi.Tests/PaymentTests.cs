@@ -93,6 +93,25 @@ public sealed class PaymentTests
         exception.Should().NotBeNull();
     }
 
+    [Fact]
+    public void SetPaymentAuthorized_ForAlreadyDeclinedPayment_ThrowsException()
+    {
+        //arrange
+        var merchantId = Guid.NewGuid().ToString();
+        var cardDetails = CardDetails;
+        var amount = Money.Create(150, "840").GetValue();
+        var payment = new Payment(cardDetails, amount, merchantId);
+        var code = Guid.NewGuid().ToString();
+        var paymentAuthorization = new PaymentAuthorization(code);
+        payment.SetDeclined();
+
+        //act
+        var exception = Record.Exception(() => payment.SetAuthorized(paymentAuthorization));
+
+        //assert
+        exception.Should().NotBeNull();
+    }
+
     private CardDetails CardDetails => CardDetails.Create(
         new FakeTimeProvider(DateTimeOffset.UtcNow),
         Faker.Random.String2(14, 19, "012345789"),

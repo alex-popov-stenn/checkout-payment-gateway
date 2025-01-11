@@ -1,73 +1,62 @@
-Assumptions:
-1. Banking simulator API for payment creation is idempotent and handled by banking simulator due to lack of explicit fields in the API
-2. Merchant will have integration with API Gateway via API
-3. For the simplicy of implementation due to lack of persistent storage or messaging system, all payments are processed via synchronous API 
-without network failures and concurrent requests
-4. MerchantId passed a header which uniqely identifies the client (for simplicty)
+﻿## Technical Task - Payment Gateway
 
-Key design consideration:
-1. Separaton of concerns
-2. Simplicy / Maintainability
-  -- Clean architecture (placing domain / architecte in the middle)
-  -- Ubiqitious language
-3. Fail fast
-  -- Contract Guards
-4. Payment Exactly once processing
--- Idempotency Key
-5. External Reference Id
--- for reconcillation processes
-6. External Metadata
--- for attaching analytics / additional data
-7. Clean architecture for maintainability and domain focused application
-8. Resource-based REST API Level 2 for simplicity
-9. Testability
-10. Open Closed
+### Problem space and requirements
+https://github.com/cko-recruitment/#requirements
 
-Production readiness action items:
-1. Durability
-2. Exactly once processing (consistency over availability)
-3. Asynchronous processing of payments with resilience techniquies in the payment gateway to 
-avoid data integrity issues due to potential concurrent requests and network failures between payment gateway and acquiring bank
-4. Observability: metrics, logging, tracing
-    -- key metrics
-        API failure rate
-        Latency
-        count of payments (failed, succeeded)
-        failed validations
-        acquiring bank api (failure rate, latency percentiles)
-        count of payments processing right now
-5. Authentication and Authroization
-6. Encyrption of sensetive card data in the database (encryption at rest)
-7. Encryption in transit (Merchant Service -> API Gateway), (API Gateway -> Bank API)
-8. Sensetive data masking in logging
-9. Confirm with legal team requirements around GDRP, Data Privacy, PCI DSS, SCA, etc
-10. Configure static code analysis to standartize code style and minimize code issues
-11. MSBuild to keep package versions, and project settings in one place
+### Key design considerations and assumptions
+1. Applied clean architecture principles for maintainability and a domain-focused application.
+2. Value objects are used to serve as a single source of truth for validation. 
+3. The Banking Simulator API for payment creation is idempotent and handled by the simulator due to lack of explicit fields in the API.
+4. Payments are processed synchronously without persistent storage or messaging for simplicity, assuming no network failures or concurrent requests.
+5. MerchantId is passed as a header to uniquely identify clients.
+6. The RESTful API is designed without versioning around the payment resource for simplicity.
+7. Comprehensive authentication and authorization layers are omitted for simplicity.
+8. The test suite addresses key risk areas, including API endpoint functionality, validation, 
+security checks for exposing more than four digits of card numbers, and ensuring merchants cannot access payments that do not belong to them.
 
-Libraries used:
-- Refit to generate a client to call external service (TOO COMPLICATED FOR THIS PROBLEM)
-- fluent validation for validating requests
-- OneOf for functional styles
+### Production Readiness Action Items
+1. Ensure exactly-once processing by prioritizing consistency over availability.
+2. Enhance durability by implementing real persistent storage.
+3. Implement robust authentication and authorization mechanisms.
+4. Encrypt sensitive card data in persistent storage (encryption at rest).
+5. Enable encryption in transit for all communication: (Merchant Service → API Gateway) and (API Gateway → Bank API).
+6. Mask sensitive data in logs to prevent exposing card details.
+7. Confirm compliance with legal and regulatory requirements, including GDPR, Data Privacy, PCI DSS, and SCA.
+8. Add basics (logging, metrics) of observability to the Payment Gateway.
 
-- xunit + bogus, webapplication factory for tests, and test containers
+### Installation
+The Payment Gateway is built with .NET 8.
 
-Nice to have:
-- configurability (currencies, amount limits, etc)
+1. Install .NET 8 SDK
+Ensure that the .NET 8 SDK is installed on your machine. You can download and install it from the official [.NET website.](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
-Risk areas
--- Validation
--- Exactly once processing
+2. To verify the installation, open a terminal and run:
+```dotnet --version```
+You should see the version of the .NET SDK installed (e.g., 8.x.x).
 
-1. Components tests (start simulator with test containers testcointainers) (e2e)
-    -- authorized (201) -> then get
-    -- declined (201) -> then get
-    -- rejected (400) -> then get 404
-2. Unit tests (value objects validation)
-    -- including expiry date corner cases (very close in the future)
-    -- payment creation
-3. 4 digits only (compiance)
-4. Security check (404)
+3. Clone or Download the Application
+Obtain the application source code, and then navigate to its directory.
 
-Value objects:
-CardDetails
-Money (Amount + Currency)
+4. To install Docker on Windows, download and install Docker Desktop from the official website, and on Linux, 
+install Docker Engine using your distribution’s package manager and Docker's official repository.
+
+### Running
+1. Open a terminal and navigate to the root of the application directory.
+2. Run the following command to remove any existing containers
+```docker-compose down```
+3. Start the BankSimulator in detached mode with
+```docker-compose up -d```
+4. Open a terminal and navigate to the application directory
+```cd src/PaymentGateway.WebApi```
+5. Run the following command to build the application
+```dotnet build```
+6. Start the application 
+```dotnet run```
+7. Open the following URL in your browser ```http://localhost:5145```
+
+### Testing
+1. Open a terminal and move to the application directory
+2. Run the following command to restore dependencies
+```dotnet restore```
+3. Run all the tests
+```dotnet test```

@@ -85,7 +85,6 @@ public sealed class PaymentsControllerTests(WebApplicationFactory<PaymentsContro
 
         //arrange
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-
     }
 
     private async Task<ProcessPaymentResponseModel> ProcessPaymentAsync(ProcessPaymentRequestModel requestModel, string merchantId, CancellationToken cancellationToken)
