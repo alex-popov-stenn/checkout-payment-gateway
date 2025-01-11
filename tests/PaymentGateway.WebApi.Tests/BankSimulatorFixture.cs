@@ -13,7 +13,7 @@ public sealed class BankSimulatorFixture : IAsyncLifetime
     public BankSimulatorFixture()
     {
         BankSimulatorContainer = new ContainerBuilder()
-            .WithName("bank_simulator")
+            .WithName("bank_simulator_test")
             .WithImage("bbyars/mountebank:2.8.1")
             .WithPortBinding(2525, 2525)
             .WithPortBinding(8080, 8080)
